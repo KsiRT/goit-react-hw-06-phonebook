@@ -1,24 +1,29 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { ContactForm } from './ContactForm/ContactForm';
 import { Filter } from './Filter/Filter';
 import Notiflix from 'notiflix';
 import { ContactList } from './Contactlist/ContactList';
 import { styled } from 'styled-components';
+import { useDispatch, useSelector } from 'react-redux';
+import { contactsSelector, filterSelector } from '../redux/contacts/selectors';
 
 export const App = () => {
-  const [contacts, setContacts] = useState(() => {
-    const parsedContacts = JSON.parse(localStorage.getItem('contacts'));
-    if (parsedContacts?.length) {
-      return parsedContacts;
-    }
-    return [];
-  });
+  // const [contacts, setContacts] = useState(() => {
+  //   const parsedContacts = JSON.parse(localStorage.getItem('contacts'));
+  //   if (parsedContacts?.length) {
+  //     return parsedContacts;
+  //   }
+  //   return [];
+  // });
+  const contacts = useSelector(contactsSelector);
+  const filter = useSelector(filterSelector);
+  const dispatch = useDispatch();
 
-  const [filter, setFilter] = useState('');
+  // const [filter, setFilter] = useState('');
 
   // Принимаем фильтр из инпута
   const handleFilterInput = value => {
-    setFilter(value);
+    dispatch({ type: 'setFilter', payload: value });
   };
 
   const addNewContact = newContact => {
@@ -28,35 +33,22 @@ export const App = () => {
     );
     checkContact
       ? Notiflix.Notify.failure(`${newContact.fullName} is already in contacts`)
-      : setContacts(prev => [...prev, newContact]);
+      : dispatch({ type: 'addContact', payload: newContact });
   };
   // Фильтруем
-  const getFilteredContact = () => {
-    if (!filter) {
-      return contacts;
-    }
-    return contacts.filter(contact =>
-      contact.fullName.toLowerCase().includes(filter.toLowerCase())
-    );
-  };
+
   // Удаляем контакт
   const handleDelete = (id, fullName) => {
-    setContacts(prevState => prevState.filter(contact => contact.id !== id));
+    dispatch({
+      type: 'deleteContact',
+      payload: id,
+    });
 
     Notiflix.Notify.success(
       `${fullName} was successfully deleted from your Phonebook`
     );
   };
 
-  // componentDidMount() логіка перенесена в useState
-
-  // componentDidUpdate
-  //  Записываем контакты из состояния в локал сторедж
-  useEffect(() => {
-    localStorage.setItem('contacts', JSON.stringify(contacts));
-  }, [contacts]);
-
-  const filteredContact = getFilteredContact(filter);
   return (
     <Container>
       <h1>Phonebook</h1>
@@ -64,7 +56,7 @@ export const App = () => {
 
       <h2>Contacts</h2>
       <Filter filter={filter} onFilterInput={handleFilterInput} />
-      <ContactList contacts={filteredContact} onDelete={handleDelete} />
+      <ContactList onDelete={handleDelete} />
     </Container>
   );
 };

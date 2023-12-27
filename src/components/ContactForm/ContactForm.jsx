@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { nanoid } from 'nanoid';
 import { Button, Form, Input } from './ContactFormStyled';
+// import { useDispatch } from 'react-redux';
 
 export const ContactForm = ({ addContact }) => {
   const [fullName, setFullName] = useState('');
   const [number, setNumber] = useState('');
-  // state = { name: '', number: '' };
 
   // вводимо в інпут
-  const handleAddInput = e => {
+  const handleChangeInput = e => {
     const { name, value } = e.target;
     if (name === 'name') {
       setFullName(value);
@@ -42,7 +42,7 @@ export const ContactForm = ({ addContact }) => {
           name="name"
           title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
           required
-          onChange={handleAddInput}
+          onChange={handleChangeInput}
           placeholder="Name Surname"
           autoComplete="false"
         />
@@ -56,7 +56,7 @@ export const ContactForm = ({ addContact }) => {
           name="number"
           title="Phone number must contain digits and can contain spaces, dashes, parentheses and can start with +"
           required
-          onChange={handleAddInput}
+          onChange={handleChangeInput}
           placeholder="Phone Number"
           autoComplete="false"
         />
