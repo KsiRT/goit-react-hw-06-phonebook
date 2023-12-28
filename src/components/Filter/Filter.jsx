@@ -1,7 +1,10 @@
 import React from 'react';
 import { Input, Label } from './FilterStyled';
+import { useSelector } from 'react-redux';
+import { filterSelector } from '../../redux/selectors';
 
-export const Filter = ({ filter, onFilterInput }) => {
+export const Filter = ({ onFilterInput }) => {
+  const filter = useSelector(filterSelector);
   return (
     <div>
       <Label htmlFor="filter">

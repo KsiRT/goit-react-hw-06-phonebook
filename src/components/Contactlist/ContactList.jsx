@@ -1,26 +1,10 @@
 import React from 'react';
 import { Button, Item, List, Name, Number } from './ContactListStyled';
-import { useSelector } from 'react-redux';
-import {
-  contactsSelector,
-  filterSelector,
-} from '../../redux/contacts/selectors';
 
-export const ContactList = ({ onDelete }) => {
-  const contacts = useSelector(contactsSelector);
-  const filter = useSelector(filterSelector);
-  const getFilteredContacts = () => {
-    if (!filter) {
-      return contacts;
-    }
-    return contacts.filter(contact =>
-      contact.fullName.toLowerCase().includes(filter.toLowerCase())
-    );
-  };
-
+export const ContactList = ({ contacts, onDelete }) => {
   return (
     <List>
-      {getFilteredContacts().map(contact => (
+      {contacts.map(contact => (
         <Item key={contact.id}>
           <Name>{contact.fullName} : </Name>
           <Number> {contact.number}</Number>
