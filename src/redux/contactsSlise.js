@@ -16,7 +16,6 @@ const contactsSlise = createSlice({
   reducers: {
     addContact: {
       prepare: contact => {
-        console.log(contact);
         return {
           payload: {
             id: nanoid(),
